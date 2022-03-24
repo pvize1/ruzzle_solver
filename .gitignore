@@ -1,2 +1,8 @@
-/zArchive/
+/.pytest_cache/
+/ruzzle/.pytest_cache/
 /ruzzle/cov_html/
+/ruzzle/.coverage
+/ruzzle/.coveragerc
+/ruzzle/report.html
+/tests/.pytest_cache/
+/zArchive/
