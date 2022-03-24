@@ -1,3 +1,0 @@
-[run]
-include = ruzzle/*
-omit = helpers/decorators.py,ruzzle.py
