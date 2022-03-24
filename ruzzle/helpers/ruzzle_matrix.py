@@ -41,7 +41,6 @@ _letter_scores = {
 _letter_distribution = "aabcdeeeefghiiijklmnoopqrrrssstttuuvwxyz"
 _end = "_end_"
 
-
 class RuzzleMatrix:
     def __init__(self, input_string="", dict_file=""):
         if len(input_string) != 16:
@@ -80,7 +79,8 @@ class RuzzleMatrix:
         for letter in next_dict_level.keys():
             if letter == _end:
                 self._words.append(word)
-                self._paths.append(paths)
+                score, path = self._get_best_path(paths)
+                self._paths.append(path)
             else:
                 word = prev_word + letter
                 paths = self._check_path_to_letter(letter, prev_paths)
@@ -135,6 +135,10 @@ class RuzzleMatrix:
             if letter not in valid_letters:
                 return False
         return True
+
+    @staticmethod
+    def _get_best_path(paths):
+        return 0, paths[0]
 
     @property
     def matrix_string(self):

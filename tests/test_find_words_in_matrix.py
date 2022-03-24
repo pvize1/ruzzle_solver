@@ -20,7 +20,8 @@ def test_navigate_dictionary(test_word_set):
     ruzzle_matrix.navigate_word_dict(ruzzle_matrix.filtered_dict, "", [])
     assert len(ruzzle_matrix.words) == 2
     assert len(ruzzle_matrix.paths) == 2
-    assert len(ruzzle_matrix.paths[1]) == 2
+    print(ruzzle_matrix.paths[1])
+    assert len(ruzzle_matrix.paths[1]) == 3
 
     print("")
     print(f"Ruzzle matrix:")
