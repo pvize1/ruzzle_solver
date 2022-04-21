@@ -8,6 +8,7 @@ TODO: 6) Use Numpy
 TODO: 7) Create Path Class
 """
 
+from .word_dict import WordDict
 from random import choice
 import fileinput
 
@@ -30,33 +31,52 @@ _next_cell = [
     [10, 11, 14],
 ]
 _letter_scores = {
-    "a": 1, "e": 1, "i": 1, "o": 1, "u": 1, "l": 1, "n": 1, "r": 1, "s": 1, "t": 1,
-    "d": 2, "g": 2,
-    "b": 3, "c": 3, "m": 3, "p": 3,
-    "f": 4, "h": 4, "v": 4, "w": 4, "y": 4,
+    "a": 1,
+    "e": 1,
+    "i": 1,
+    "o": 1,
+    "u": 1,
+    "l": 1,
+    "n": 1,
+    "r": 1,
+    "s": 1,
+    "t": 1,
+    "d": 2,
+    "g": 2,
+    "b": 3,
+    "c": 3,
+    "m": 3,
+    "p": 3,
+    "f": 4,
+    "h": 4,
+    "v": 4,
+    "w": 4,
+    "y": 4,
     "k": 5,
-    "j": 8, "x": 8,
-    "q": 10, "z": 10,
+    "j": 8,
+    "x": 8,
+    "q": 10,
+    "z": 10,
 }
 _letter_distribution = "aabcdeeeefghiiijklmnoopqrrrssstttuuvwxyz"
 _end = "_end_"
 
+
 class RuzzleMatrix:
-    def __init__(self, input_string="", dict_file=""):
+    def __init__(self, input_string="", language="test"):
+        self._matrix_string = input_string.lower()
         if len(input_string) != 16:
             self._matrix_string = self._create_matrix()
-        else:
-            self._matrix_string = input_string.lower()
         self.valid_letters = set(self._matrix_string)
-        self._file_to_use = dict_file
         self._words = list()
         self._word_count = 0
         self._paths = list()
         self._level = 0
-        self._filtered_dict = self._import_file_to_dict()
+        self._filtered_dict = self._import_file_to_dict(language)
 
-    def _import_file_to_dict(self):
-        iterator = fileinput.input(self._file_to_use)
+    def _import_file_to_dict(self, language):
+        word_dict = WordDict(language)
+        iterator = fileinput.input(word_dict.file_to_use)
 
         root = dict()
 
@@ -129,7 +149,7 @@ class RuzzleMatrix:
 
     @staticmethod
     def _are_letters_valid(word, valid_letters):
-        if len(word)<2:
+        if len(word) < 2:
             return False
         for letter in word:
             if letter not in valid_letters:

@@ -3,12 +3,10 @@ TODO: 1) Add environment variable handler
 TODO: 2) Run coverage report
 """
 
-from helpers.word_dict import WordDict
 from helpers.ruzzle_matrix import RuzzleMatrix
 
 if __name__ == "__main__":
-    english_words = WordDict(language="en")
-    ruzzle_matrix = RuzzleMatrix(dict_file=english_words.file_to_use)
+    ruzzle_matrix = RuzzleMatrix(language="en")
 
     print("")
     print(f"Count of words={ruzzle_matrix.word_count}")

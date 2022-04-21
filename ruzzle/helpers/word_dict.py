@@ -20,11 +20,6 @@ class WordDict:
             self._file_to_use = base_path + dict_files[language]
         except KeyError:
             raise KeyError(f"Language {language} not available")
-        self._language = language
-
-    @property
-    def language(self):
-        return self._language
 
     @property
     def file_to_use(self):
