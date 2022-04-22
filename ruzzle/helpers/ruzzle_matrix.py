@@ -8,9 +8,9 @@ TODO: 6) Use Numpy
 TODO: 7) Create Path Class
 """
 
-from .word_dict import WordDict
 from random import choice
-import fileinput
+from .word_dict import WordDict
+from .word_list import WordList
 
 _next_cell = [
     [1, 4, 5],
@@ -63,44 +63,28 @@ _end = "_end_"
 
 
 class RuzzleMatrix:
-    def __init__(self, input_string="", language="test"):
-        self._matrix_string = input_string.lower()
-        if len(input_string) != 16:
+    def __init__(self, input_string="", multipliers="", language="test"):
+        if len(input_string) == 16 and input_string.isalpha():
+            self._matrix_string = input_string.lower()
+        else:
             self._matrix_string = self._create_matrix()
-        self.valid_letters = set(self._matrix_string)
-        self._words = list()
-        self._word_count = 0
-        self._paths = list()
-        self._level = 0
-        self._filtered_dict = self._import_file_to_dict(language)
-
-    def _import_file_to_dict(self, language):
+        if len(multipliers) == 16:
+            self._multipliers = multipliers
+        else:
+            self._multipliers = ["."] * 16
+        self._words = WordList()
         word_dict = WordDict(language)
-        iterator = fileinput.input(word_dict.file_to_use)
-
-        root = dict()
-
-        for line in iterator:
-            word = line.split()[0]
-            if self._are_letters_valid(word, self.valid_letters):
-                self._word_count += 1
-                current_value = root
-                for letter in word:
-                    current_value = current_value.setdefault(letter, {})
-                current_value.setdefault(_end, _end)
-        return root
+        self._filtered_dict = word_dict.import_file_to_dict(set(self._matrix_string))
 
     def navigate_word_dict(self, next_dict_level, word, paths):
         prev_word = word
         prev_paths = paths
-        self._level += 1
         success = False
 
         for letter in next_dict_level.keys():
             if letter == _end:
-                self._words.append(word)
-                score, path = self._get_best_path(paths)
-                self._paths.append(path)
+                score, path = self._get_best_path(word, paths, self._multipliers)
+                self._words.add_new_word(word, path, score)
             else:
                 word = prev_word + letter
                 paths = self._check_path_to_letter(letter, prev_paths)
@@ -119,15 +103,10 @@ class RuzzleMatrix:
                     new_paths.append([matrx_idx])
                 matrx_idx += 1
         else:
-            # xTODO: 2) Remove path_idx
-            # path_idx = 0
             for path in paths:
                 for cell in _next_cell[path[-1]]:
                     if self._matrix_string[cell] == letter and cell not in path:
                         new_paths.append([*path, cell])
-                        # new_paths.append([])
-                        # new_paths[path_idx] = [*path, cell]
-                        # path_idx += 1
         return new_paths
 
     def draw_matrix(self):
@@ -148,33 +127,62 @@ class RuzzleMatrix:
         return new_matrix
 
     @staticmethod
-    def _are_letters_valid(word, valid_letters):
-        if len(word) < 2:
-            return False
+    def _get_best_path(word, paths, multi):
+        # TODO: Sort out scoring of paths and pick top score
+        base_score = 0
         for letter in word:
-            if letter not in valid_letters:
-                return False
-        return True
+            base_score += _letter_scores[letter]
 
-    @staticmethod
-    def _get_best_path(paths):
-        return 0, paths[0]
+        best_score = 0
+        best_path = []
+        for path in paths:
+            curr_score = base_score
+            multiplier = 1
+            idx = 0
+            for cell in path:
+                if multi[cell] != ".":
+                    if multi[cell] == "2l":
+                        curr_score += _letter_scores[word[idx]]
+                    if multi[cell] == "3l":
+                        curr_score += (_letter_scores[word[idx]] * 2)
+                    if multi[cell] == "2w":
+                        multiplier *= 2
+                    if multi[cell] == "3w":
+                        multiplier *= 3
+                idx += 1
+            curr_score *= multiplier
+            if curr_score > best_score:
+                best_score = curr_score
+                best_path = path
+        return best_score, best_path
 
     @property
     def matrix_string(self):
         return self._matrix_string
 
     @property
+    def multipliers(self):
+        return self._multipliers
+
+    @property
+    def sort_list_words(self):
+        return self._words.sorted_words
+
+    @property
     def words(self):
-        return self._words
+        return [word_data.word for word_data in self._words.words]
+
+    @property
+    def lengths(self):
+        return [word_data.word_len for word_data in self._words.words]
 
     @property
     def paths(self):
-        return self._paths
+        return [word_data.word_path for word_data in self._words.words]
 
     @property
-    def word_count(self):
-        return self._word_count
+    def scores(self):
+        return [word_data.score for word_data in self._words.words]
 
     @property
     def filtered_dict(self):

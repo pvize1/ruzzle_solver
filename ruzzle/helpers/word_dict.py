@@ -1,16 +1,14 @@
 """
-xTODO: 1) Change debug to language ("en" or "test"), rename text files
-xTODO: 2) Save english dictionary to file - CANCELLED
-TODO: 3) Remove path from dict_files, and use curr/tree to search for file, check for existence
-TODO: 4) Raise error if language/file not found
 """
 
+import fileinput
 
 dict_files = {
     "en": "words_english.txt",
     "test": "words_test.txt",
 }
 base_path = "../wordfiles/"
+_end = "_end_"
 
 
 class WordDict:
@@ -21,6 +19,23 @@ class WordDict:
         except KeyError:
             raise KeyError(f"Language {language} not available")
 
-    @property
-    def file_to_use(self):
-        return self._file_to_use
+    def import_file_to_dict(self, valid_letters):
+        root = dict()
+
+        for line in fileinput.input(self._file_to_use):
+            word = line.split()[0]
+            if self._are_letters_valid(word, valid_letters):
+                current_value = root
+                for letter in word:
+                    current_value = current_value.setdefault(letter, {})
+                current_value.setdefault(_end, _end)
+        return root
+
+    @staticmethod
+    def _are_letters_valid(word, valid_letters):
+        if len(word) < 2:
+            return False
+        for letter in word:
+            if letter not in valid_letters:
+                return False
+        return True
