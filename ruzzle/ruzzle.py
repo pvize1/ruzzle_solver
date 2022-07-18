@@ -6,10 +6,24 @@ TODO: 2) Run coverage report
 from helpers.ruzzle_matrix import RuzzleMatrix
 
 if __name__ == "__main__":
-    multiplier_matrix = [".", "2l", ".", ".",
-                         ".", ".", "3w", ".",
-                         ".", ".", ".", ".",
-                         ".", "2w", ".", ".",]
+    multiplier_matrix = [
+        ".",
+        "2l",
+        ".",
+        ".",
+        ".",
+        ".",
+        "3w",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "2w",
+        ".",
+        ".",
+    ]
     ruzzle_matrix = RuzzleMatrix(multipliers=multiplier_matrix, language="en")
 
     print("")

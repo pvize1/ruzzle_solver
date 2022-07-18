@@ -10,7 +10,9 @@ class WordData:
         self._score = score
 
     def __repr__(self):
-        return f"WordData: {self._word=}, {self._length=}, {self._path=}, {self._score=}"
+        return (
+            f"WordData({self._word=}, {self._length=}, {self._path=}, {self._score=})"
+        )
 
     def __str__(self):
         return f"{self._word}, {self._length}, {self._path}, {self._score}"

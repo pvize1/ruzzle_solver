@@ -144,7 +144,7 @@ class RuzzleMatrix:
                     if multi[cell] == "2l":
                         curr_score += _letter_scores[word[idx]]
                     if multi[cell] == "3l":
-                        curr_score += (_letter_scores[word[idx]] * 2)
+                        curr_score += _letter_scores[word[idx]] * 2
                     if multi[cell] == "2w":
                         multiplier *= 2
                     if multi[cell] == "3w":

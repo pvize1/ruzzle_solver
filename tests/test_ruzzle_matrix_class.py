@@ -19,12 +19,16 @@ def test_input_string_not_char():
 
 def test_multiplier_set():
     multi = ["-"] * 16
-    ruzzle_matrix = RuzzleMatrix(input_string="atatatatatatatat", multipliers=multi, language="test")
+    ruzzle_matrix = RuzzleMatrix(
+        input_string="atatatatatatatat", multipliers=multi, language="test"
+    )
     assert ruzzle_matrix.multipliers == multi
 
 
 def test_multiplier_2chars():
-    ruzzle_matrix = RuzzleMatrix(input_string="..", multipliers=["", ""], language="test")
+    ruzzle_matrix = RuzzleMatrix(
+        input_string="..", multipliers=["", ""], language="test"
+    )
     assert len(ruzzle_matrix.multipliers) != 2
 
 
@@ -41,7 +45,7 @@ def test_navigate_dictionary():
     print("")
     print(f"Ruzzle matrix:")
     for i in range(4):
-        print(ruzzle_matrix.matrix_string[i * 4: i * 4 + 4])
+        print(ruzzle_matrix.matrix_string[i * 4 : i * 4 + 4])
     print("")
 
     for idx in range(2):
@@ -53,6 +57,6 @@ def test_draw_matrix(capsys):
     ruzzle_matrix.draw_matrix()
     captured = capsys.readouterr()
     assert (
-            captured.out
-            == "\n-+-+-+-\nA A H D \n-+-+-+-\nE F H H \n-+-+-+-\nI J K L \n-+-+-+-\nM N O T \n-+-+-+-\n\n"
+        captured.out
+        == "\n-+-+-+-\nA A H D \n-+-+-+-\nE F H H \n-+-+-+-\nI J K L \n-+-+-+-\nM N O T \n-+-+-+-\n\n"
     )
