@@ -36,6 +36,7 @@ class WordDict:
         if len(word) < 2:
             return False
         for letter in word:
+            # TODO change to for letter in set(word)
             if letter not in valid_letters:
                 return False
         return True
